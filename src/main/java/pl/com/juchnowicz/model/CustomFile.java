@@ -6,7 +6,6 @@ import java.util.UUID;
 
 public class CustomFile implements Serializable{
     private UUID fileUUID;
-    private UUID userUUID;
     private String name;
     private LocalDateTime creationDateTime;
     private byte[] fileContent;
@@ -15,18 +14,16 @@ public class CustomFile implements Serializable{
     public CustomFile() {
     }
 
-    public CustomFile(UUID fileUUID, UUID userUUID, String name, LocalDateTime creationDateTime, byte[] fileContent, String contentType) {
+    public CustomFile(UUID fileUUID, String name, LocalDateTime creationDateTime, byte[] fileContent, String contentType) {
         this.fileUUID = fileUUID;
-        this.userUUID = userUUID;
         this.name = name;
         this.creationDateTime = creationDateTime;
         this.fileContent = fileContent;
         this.contentType = contentType;
     }
 
-    public CustomFile(UUID fileUUID, UUID userUUID, String name, LocalDateTime creationDateTime) {
+    public CustomFile(UUID fileUUID, String name, LocalDateTime creationDateTime) {
         this.fileUUID = fileUUID;
-        this.userUUID = userUUID;
         this.name = name;
         this.creationDateTime = creationDateTime;
     }
@@ -37,14 +34,6 @@ public class CustomFile implements Serializable{
 
     public void setFileUUID(UUID fileUUID) {
         this.fileUUID = fileUUID;
-    }
-
-    public UUID getUserUUID() {
-        return userUUID;
-    }
-
-    public void setUserUUID(UUID userUUID) {
-        this.userUUID = userUUID;
     }
 
     public String getName() {

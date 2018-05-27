@@ -5,15 +5,10 @@ import pl.com.juchnowicz.core.db.DatabaseController;
 import pl.com.juchnowicz.helpers.DisksFactory;
 import pl.com.juchnowicz.model.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -133,5 +128,43 @@ public class Client implements Runnable {
             }
         }
         return task;
+    }
+
+    public void removeTaskForFile(UUID fileUUID){
+        synchronized (tasks){
+            for (int i = 0; i < tasks.size(); i++) {
+                ServerTask iteratorTask = tasks.get(i);
+                if(iteratorTask.getFileUUID().equals(fileUUID)){
+                    tasks.remove(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void sendMessage(Message message){
+        if(socketChannel == null){
+            return;
+        }
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(message);
+            byte[] bytes = byteArrayOutputStream.toByteArray();
+            ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+            while (byteBuffer.hasRemaining()){
+                socketChannel.write(byteBuffer);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                byteArrayOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

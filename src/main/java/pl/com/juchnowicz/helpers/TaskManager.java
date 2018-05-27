@@ -48,7 +48,12 @@ public class TaskManager extends Thread {
                                         diskID = availableDisks.get(0);
                                     }
                                     client.isBusy.set(true);
-                                    disks.get(diskID).setClientWithTask(client, task);
+                                    for (Disk disk: disks) {
+                                        if(diskID == disk.getDiskID()){
+                                            disk.setClientWithTask(client, task);
+                                            break;
+                                        }
+                                    }
                                     availableDisks.remove(diskID);
                                 }
                             }

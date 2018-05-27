@@ -76,5 +76,28 @@ public class DatabaseController {
         }
     }
 
+    public static FilesEntity getFileBy(UUID fileUUID){
+        String sql = "SELECT * FROM files WHERE files.FILE_UUID = (?) LIMIT 1";
+        FilesEntity filesEntity = null;
+        try (Connection conn = connect();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, fileUUID.toString());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String filename = resultSet.getString("FILENAME");
+                String diskID = resultSet.getString("DISK_ID");
+                String userID = resultSet.getString("USER_ID");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                LocalDateTime creationTime = LocalDateTime.parse(resultSet.getString("CREATION_DATE"), formatter);
+                filesEntity = new FilesEntity(filename,fileUUID,diskID,userID,creationTime);
+                break;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            return filesEntity;
+        }
+    }
+
 
 }
